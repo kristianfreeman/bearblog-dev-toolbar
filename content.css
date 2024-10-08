@@ -1,0 +1,40 @@
+div#bear-devpanel {
+  align-items: center;
+  background-color: black;
+  color: white;
+  display: flex;
+  font-family: monospace;
+  font-size: 1rem;
+  gap: 10px;
+  left: 0;
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  text-wrap: nowrap;
+  top: 0;
+  z-index: 9999;
+}
+
+div#bear-devpanel-left {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+div#bear-devpanel-right {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  justify-content: flex-end;
+}
+
+select#bear-devpanel-blog-selector {
+  background-color: black;
+  border: 1px solid white;
+  color: white;
+  font-family: monospace;
+  padding: 5px;
+}

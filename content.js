@@ -9,13 +9,29 @@ const navItems = [
   { name: 'Directives', icon: '🏗️', url: '/dashboard/directives' },
 ];
 
+// Logging function
+function log(message) {
+  console.log(`[Bear DevPanel]: ${message}`);
+}
+
 // Function to get allowed domains and blogs
 function getAllowedDomainsAndBlogs(callback) {
+  log('Attempting to retrieve blogs from storage');
   const storageAPI = typeof browser !== 'undefined' ? browser.storage.local : chrome.storage.local;
-  storageAPI.get(['customDomains', 'blogs'], (result) => {
-    const customDomains = result.customDomains || [];
+  storageAPI.get(['blogs'], (result) => {
+    if (chrome.runtime.lastError) {
+      log(`Error retrieving from storage: ${chrome.runtime.lastError.message}`);
+      callback(defaultDomains, []);
+      return;
+    }
+
     const blogs = result.blogs || [];
-    callback([...defaultDomains, ...customDomains, ...blogs.map(blog => blog.customDomain).filter(Boolean)], blogs);
+    log(`Retrieved blogs: ${JSON.stringify(blogs)}`);
+    const customDomains = blogs.map(blog => blog.customDomain).filter(Boolean);
+    log(`Extracted custom domains: ${JSON.stringify(customDomains)}`);
+    const allowedDomains = [...defaultDomains, ...customDomains];
+    log(`Final allowed domains: ${JSON.stringify(allowedDomains)}`);
+    callback(allowedDomains, blogs);
   });
 }
 
@@ -23,65 +39,45 @@ function getAllowedDomainsAndBlogs(callback) {
 function getCurrentBlog(blogs) {
   const currentHost = window.location.hostname;
   const currentPath = window.location.pathname;
+  log(`Current location: ${currentHost}${currentPath}`);
 
-  // Check if we're on bearblog.dev with a blog slug
   if (currentHost === 'bearblog.dev') {
     const blogSlug = currentPath.split('/')[1];
-    return blogs.find(blog => blog.slug === blogSlug) || null;
+    const currentBlog = blogs.find(blog => blog.slug === blogSlug) || null;
+    log(`On bearblog.dev, current blog: ${JSON.stringify(currentBlog)}`);
+    return currentBlog;
   }
 
-  // Check if we're on a custom domain
-  return blogs.find(blog => blog.customDomain === currentHost) || null;
+  const currentBlog = blogs.find(blog => blog.customDomain === currentHost) || null;
+  log(`On custom domain, current blog: ${JSON.stringify(currentBlog)}`);
+  return currentBlog;
 }
 
 // Function to create and insert navbar
 function createNavbar(allowedDomains, blogs) {
+  log('Creating navbar');
   const currentBlog = getCurrentBlog(blogs);
-  
+
   if (allowedDomains.includes(window.location.hostname) || currentBlog) {
+    log('Current domain is allowed or current blog exists, creating navbar');
     const navbar = document.createElement('div');
-    navbar.id = 'bear-devpanel-nav';
-    navbar.style.cssText = `
-      position: fixed;
-      font-size: 1rem;
-      top: 0;
-      left: 0;
-      right: 0;
-      background-color: black;
-      color: white;
-      font-family: monospace;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 9999;
-    `;
+    navbar.id = 'bear-devpanel';
 
     const leftContainer = document.createElement('div');
+    leftContainer.id = 'bear-devpanel-left';
     const rightContainer = document.createElement('div');
+    rightContainer.id = 'bear-devpanel-right';
 
     const bear = document.createElement('a');
     bear.href = 'https://bearblog.dev';
     bear.innerHTML = '🐻 🚧';
     leftContainer.appendChild(bear);
 
-    leftContainer.style.cssText = `
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 20px;
-      flex: 1;
-    `;
-
     if (currentBlog) {
+      log('Current blog exists, creating blog selector');
       const blogSelector = document.createElement('select');
-      blogSelector.style.cssText = `
-        background-color: black;
-        font-family: monospace;
-        color: white;
-        border: 1px solid white;
-        padding: 5px;
-      `;
+      blogSelector.id = 'bear-devpanel-blog-selector';
+
       blogs.forEach(blog => {
         const option = document.createElement('option');
         option.value = blog.slug;
@@ -96,15 +92,9 @@ function createNavbar(allowedDomains, blogs) {
         }
       });
       leftContainer.appendChild(blogSelector);
+    } else {
+      log('No current blog, skipping blog selector');
     }
-
-    rightContainer.style.cssText = `
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 20px;
-      flex: 1;
-    `;
 
     navItems.forEach(item => {
       const link = document.createElement('a');
@@ -122,10 +112,16 @@ function createNavbar(allowedDomains, blogs) {
 
     document.body.insertBefore(navbar, document.body.firstChild);
     document.body.style.paddingTop = `${navbar.offsetHeight}px`;
+    log('Navbar inserted into the page');
+  } else {
+    log('Current domain is not allowed and no current blog exists, skipping navbar creation');
   }
 }
 
 // Initialize the extension
+log('Initializing Bear DevPanel');
 getAllowedDomainsAndBlogs((allowedDomains, blogs) => {
+  log('Retrieved allowed domains and blogs, creating navbar');
   createNavbar(allowedDomains, blogs);
 });
+

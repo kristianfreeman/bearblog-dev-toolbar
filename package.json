@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "extension build",
+    "dev": "extension dev",
+    "start": "extension start"
+  },
+  "devDependencies": {
+    "extension": "^2.0.0-beta.2"
+  }
+}

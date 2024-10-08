@@ -14,9 +14,15 @@
         "*://*.bearblog.dev/*",
         "<all_urls>"
       ],
+      "css": ["content.css"],
       "js": ["content.js"]
     }
   ],
+  "icons": {
+    "16": "images/icons16.png",
+    "48": "images/icons48.png",
+    "128": "images/icons128.png"
+  },
   "browser_action": {
     "default_popup": "popup.html"
   },
