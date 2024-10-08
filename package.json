@@ -2,7 +2,9 @@
   "scripts": {
     "build": "extension build",
     "dev": "extension dev",
-    "start": "extension start"
+    "start": "extension start",
+    "pre:safari": "npm run build",
+    "safari": "xcrun safari-web-extension-converter --project-location safari dist/chrome"
   },
   "devDependencies": {
     "extension": "^2.0.0-beta.2"

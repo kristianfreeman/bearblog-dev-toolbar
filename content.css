@@ -31,6 +31,13 @@ div#bear-devpanel-right {
   justify-content: flex-end;
 }
 
+/* Hide the right side on mobile or small screens */
+@media (max-width: 600px) {
+  div#bear-devpanel-right {
+    display: none;
+  }
+}
+
 select#bear-devpanel-blog-selector {
   background-color: black;
   border: 1px solid white;
