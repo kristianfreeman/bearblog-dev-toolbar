@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "bearblog dev mode",
+  "version": "1.0",
+  "description": "Dev toolbar for managing bearblog sites",
+  "permissions": [
+    "storage",
+    "*://*.bearblog.dev/*",
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.bearblog.dev/*",
+        "<all_urls>"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "bearblog-extension@example.com"
+    }
+  }
+}

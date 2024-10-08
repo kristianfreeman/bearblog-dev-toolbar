@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      width: 300px;
+      font-family: monospace;
+    }
+    input, button, select {
+      margin: 5px 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>Manage Blogs</h2>
+  <input type="text" id="blogNameInput" placeholder="Blog Name">
+  <input type="text" id="blogSlugInput" placeholder="Blog Slug">
+  <input type="text" id="customDomainInput" placeholder="Custom Domain (optional)">
+  <button id="addBlog">Add Blog</button>
+  <div id="message"></div>
+  <h3>Current Blogs:</h3>
+  <select id="blogList" size="5"></select>
+  <button id="removeBlog">Remove Selected Blog</button>
+  <script src="popup.js"></script>
+</body>
+</html>
