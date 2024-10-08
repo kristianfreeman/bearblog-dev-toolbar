@@ -10,10 +10,18 @@
       margin: 5px 0;
       width: 100%;
     }
+
+    div#logMessages {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      max-height: 200px;
+      overflow-y: scroll;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
-  <h2>Manage Blogs</h2>
+  <h2>Bearblog Dev Mode Settings</h2>
   <input type="text" id="blogNameInput" placeholder="Blog Name">
   <input type="text" id="blogSlugInput" placeholder="Blog Slug">
   <input type="text" id="customDomainInput" placeholder="Custom Domain (optional)">
@@ -22,6 +30,7 @@
   <h3>Current Blogs:</h3>
   <select id="blogList" size="5"></select>
   <button id="removeBlog">Remove Selected Blog</button>
+    <div id="logMessages"></div>
   <script src="popup.js"></script>
 </body>
 </html>

@@ -17,8 +17,7 @@ function log(message) {
 // Function to get allowed domains and blogs
 function getAllowedDomainsAndBlogs(callback) {
   log('Attempting to retrieve blogs from storage');
-  const storageAPI = typeof browser !== 'undefined' ? browser.storage.local : chrome.storage.local;
-  storageAPI.get(['blogs'], (result) => {
+  chrome.storage.local.get(['blogs'], (result) => {
     if (chrome.runtime.lastError) {
       log(`Error retrieving from storage: ${chrome.runtime.lastError.message}`);
       callback(defaultDomains, []);
@@ -98,7 +97,8 @@ function createNavbar(allowedDomains, blogs) {
 
     navItems.forEach(item => {
       const link = document.createElement('a');
-      link.href = currentBlog ? `https://bearblog.dev/${currentBlog.slug}${item.url}` : item.url;
+      const blog = currentBlog ? currentBlog : blogs[0];
+      link.href = blog ? `https://bearblog.dev/${blog.slug}${item.url}` : item.url;
       link.innerHTML = `${item.icon} ${item.name}`;
       link.style.cssText = `
         text-decoration: none;

@@ -1,12 +1,15 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "bearblog dev mode",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Dev toolbar for managing bearblog sites",
   "permissions": [
     "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
     "*://*.bearblog.dev/*",
-    "<all_urls>"
+    "*://*/*"
   ],
   "content_scripts": [
     {
@@ -23,12 +26,7 @@
     "48": "images/icons48.png",
     "128": "images/icons128.png"
   },
-  "browser_action": {
+  "action": {
     "default_popup": "popup.html"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "bearblog-extension@example.com"
-    }
   }
 }

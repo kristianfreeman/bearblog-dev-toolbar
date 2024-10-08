@@ -15,29 +15,12 @@ function updateLogDisplay() {
   }
 }
 
-const storage = (function() {
-  if (typeof browser !== 'undefined' && browser.storage) {
-    log('Using browser.storage (Safari/Firefox)');
-    return browser.storage.local;
-  } else if (typeof chrome !== 'undefined' && chrome.storage) {
-    log('Using chrome.storage (Chrome)');
-    return chrome.storage.local;
-  } else {
-    log('No storage API found');
-    return null;
-  }
-})();
+const storage = chrome.storage.local;
 
 function getItem(key) {
   return new Promise((resolve, reject) => {
-    if (!storage) {
-      const error = new Error('Storage API not available');
-      log(`Error in getItem: ${error.message}`);
-      reject(error);
-      return;
-    }
     storage.get(key, (result) => {
-      const error = storage.runtime?.lastError || chrome.runtime?.lastError;
+      const error = chrome.runtime.lastError;
       if (error) {
         log(`Error in getItem: ${error.message}`);
         reject(error);
@@ -51,14 +34,8 @@ function getItem(key) {
 
 function setItem(key, value) {
   return new Promise((resolve, reject) => {
-    if (!storage) {
-      const error = new Error('Storage API not available');
-      log(`Error in setItem: ${error.message}`);
-      reject(error);
-      return;
-    }
     storage.set({ [key]: value }, () => {
-      const error = storage.runtime?.lastError || chrome.runtime?.lastError;
+      const error = chrome.runtime.lastError;
       if (error) {
         log(`Error in setItem: ${error.message}`);
         reject(error);
@@ -79,18 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const customDomainInput = document.getElementById('customDomainInput');
   const messageDiv = document.getElementById('message');
   const blogList = document.getElementById('blogList');
-
-  // Create a div for log messages if it doesn't exist
-  if (!document.getElementById('logMessages')) {
-    const logDiv = document.createElement('div');
-    logDiv.id = 'logMessages';
-    logDiv.style.maxHeight = '200px';
-    logDiv.style.overflowY = 'scroll';
-    logDiv.style.border = '1px solid #ccc';
-    logDiv.style.padding = '10px';
-    logDiv.style.marginTop = '20px';
-    document.body.appendChild(logDiv);
-  }
 
   async function updateBlogList() {
     log('Updating blog list');
