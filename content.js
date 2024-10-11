@@ -11,7 +11,8 @@ const navItems = [
 
 // Logging function
 function log(message) {
-  console.log(`[Bear DevPanel]: ${message}`);
+  // If you want logging, uncomment the following line
+  // console.log(`[Bear DevPanel]: ${message}`);
 }
 
 // Function to get allowed domains and blogs
